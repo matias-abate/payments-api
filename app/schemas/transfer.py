@@ -3,8 +3,8 @@ from datetime import datetime
 from typing import Optional
 
 
-class PaymentCreate(BaseModel):
-    card_id: int
+class TransferCreate(BaseModel):
+    receiver_id: int
     amount: float
     currency: str = "USD"
     description: Optional[str] = None
@@ -17,15 +17,21 @@ class PaymentCreate(BaseModel):
         return round(v, 2)
 
 
-class PaymentResponse(BaseModel):
+class TransferResponse(BaseModel):
     id: int
-    user_id: int
-    card_id: int
+    sender_id: int
+    receiver_id: int
     amount: float
     currency: str
     status: str
     description: Optional[str]
     created_at: datetime
+    completed_at: Optional[datetime]
 
     class Config:
         from_attributes = True
+
+
+class TransferDetail(TransferResponse):
+    sender_name: str
+    receiver_name: str

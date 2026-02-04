@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 class CardCreate(BaseModel):
-    card_number: str  # se recibe completo, se guarda enmascarado
+    card_number: str
     card_type: str
     expiration_month: int
     expiration_year: int
@@ -24,6 +24,15 @@ class CardCreate(BaseModel):
             raise ValueError("Mes debe estar entre 1 y 12")
         return v
 
+    @field_validator("expiration_year")
+    @classmethod
+    def validate_year(cls, v):
+        from datetime import datetime
+        current_year = datetime.utcnow().year
+        if v < current_year or v > current_year + 20:
+            raise ValueError(f"Año debe estar entre {current_year} y {current_year + 20}")
+        return v
+
 
 class CardResponse(BaseModel):
     id: int
@@ -32,7 +41,20 @@ class CardResponse(BaseModel):
     expiration_month: int
     expiration_year: int
     holder_name: str
+    status: str
     created_at: datetime
 
     class Config:
         from_attributes = True
+
+
+class CardStatusUpdate(BaseModel):
+    status: str
+    
+    @field_validator("status")
+    @classmethod
+    def validate_status(cls, v):
+        allowed = ["active", "blocked"]
+        if v not in allowed:
+            raise ValueError(f"Status debe ser uno de: {allowed}")
+        return v
