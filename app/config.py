@@ -2,12 +2,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str = "sqlite:///./payments.db"
+    database_url: str
     secret_key: str = "dev-secret-key"
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 30
     
-    # Límites por nivel de verificación
     limits_basic: dict = {
         "max_cards": 2,
         "max_transaction": 500.0,

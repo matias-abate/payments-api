@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from app.database import engine, Base
+from app.models import User, Card, Payment, Transfer
 from app.routers import users, cards, payments, transfers
+
+from app.config import settings
+print("DATABASE_URL:", settings.database_url)
 
 # Crear las tablas
 Base.metadata.create_all(bind=engine)
